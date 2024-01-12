@@ -1,5 +1,6 @@
 import './style.css'
 import { setupCounter } from './counter.ts'
+import { intialize } from './auth/index.ts'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -23,3 +24,4 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 `
 
 setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+intialize();

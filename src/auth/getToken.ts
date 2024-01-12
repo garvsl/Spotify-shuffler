@@ -1,6 +1,6 @@
 export async function getAccessToken(clientId:string, code:string): Promise<string> {
     const verifier = localStorage.getItem("verifier");
-
+    console.log(verifier)
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
@@ -15,11 +15,8 @@ export async function getAccessToken(clientId:string, code:string): Promise<stri
         },
         body: params
     })
-
+    console.log(result)
     const {access_token} = await result.json();
     return access_token
 }
 
-const clientId = '046df2a638584856a52c02e46a4bb869'
-const params = new URLSearchParams(window.location.search);
-const code = params.get("code");

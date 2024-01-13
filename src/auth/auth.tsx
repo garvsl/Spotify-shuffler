@@ -10,7 +10,7 @@ export const AuthProvider = (props: any) => {
   const [loading, setLoading] = React.useState(true);
   const [playlists, setPlaylists] = React.useState(null);
 
-  const redirectUrl = 'http://localhost:5173'; 
+  const redirectUrl = 'http://localhost:5173';
   const authorizationEndpoint = 'https://accounts.spotify.com/authorize';
   const tokenEndpoint = 'https://accounts.spotify.com/api/token';
   const scope =
@@ -136,20 +136,22 @@ export const AuthProvider = (props: any) => {
   async function logoutClick() {
     localStorage.clear();
     window.location.href = redirectUrl;
+    setUser(null);
   }
 
   async function refreshTokenClick() {
     const token = await refreshToken();
     currentToken.save(token);
-    setUser(null)
+   
   }
 
   React.useEffect(() => {
     const args = new URLSearchParams(window.location.search);
     const code = args.get('code');
 
-
+    
     (async () => {
+      console.log(currentToken)
       if (code) {
         const token = await getToken(code);
         currentToken.save(token);
@@ -160,28 +162,30 @@ export const AuthProvider = (props: any) => {
 
         const updatedUrl = url.search ? url.href : url.href.replace('?', '');
         window.history.replaceState({}, document.title, updatedUrl);
-        setLoading(false)
+        setLoading(false);
       }
 
       if (currentToken.access_token && currentToken.access_token != 'undefined') {
         const userData = await getUserData();
+        if(userData?.error?.message == 'The access token expired') {
+          refreshTokenClick();
+        }
         setUser(userData);
         const userPlaylists = await getUserPlaylists(userData);
         setPlaylists(userPlaylists);
-        console.log(userPlaylists);
-        setLoading(false)
+        setLoading(false);
       }
 
       // Otherwise we're not logged in, so render the login template
       if (!currentToken.access_token || currentToken.access_token == 'undefined') {
         setUser(null);
-        setLoading(false)
+        setLoading(false);
       }
     })();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading }}>
+    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading, logoutClick}}>
       {props.children}
     </AuthContext.Provider>
   );

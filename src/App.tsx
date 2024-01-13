@@ -1,545 +1,66 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as React from 'react';
+import { ShuffleIcon } from '@radix-ui/react-icons';
 import {
-  ChevronDownIcon,
-  GridIcon,
-  HamburgerMenuIcon,
-  MinusIcon,
-  PlusIcon
-} from '@radix-ui/react-icons';
-import {
-  Button,
   Text,
-  IconButton,
-  Link,
-  DropdownMenu,
-  Dialog,
-  Popover,
-  Separator,
-  Avatar
+
+  Avatar,
+
+  Flex,
+  ScrollArea,
+  Card,
+  IconButton
   //
   // ThemePanel,
 } from '@radix-ui/themes';
 
-export default function HomeOS() {
-  const [adultCount, setAdultCount] = React.useState(1);
-  const [childCount, setChildCount] = React.useState(0);
-  const [infantCount, setInfantCount] = React.useState(0);
 
-  const totalCount = adultCount + childCount + infantCount;
+export default function HomeOS() {
 
   return (
-    <div className="overflow-hidden">
       <div
+      className='w-[100vw] h-[100vh] '
         style={{
-          background: 'linear-gradient(150deg, transparent 60%, var(--gray-2) 100%)'
+          background: 'linear-gradient(150deg, transparent 60%, green 100%)'
         }}
       >
         <header
-          style={{
-            padding: 'var(--space-4) var(--space-6)',
-            borderBottom: '1px solid var(--gray-8)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-          }}
+        className='w-[100vw] p-4 border-b border-gray-8 flex justify-between items-center sticky top-0 left-0 z-50 backdrop-blur-xl bg-white/30' 
+
         >
           <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-            <svg width="20" height="22" viewBox="0 0 20 22" style={{ fill: 'var(--accent-9)' }}>
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M9.38606 0.210648C9.74717 -0.0702159 10.2528 -0.0702159 10.6139 0.210648L19.6139 7.21065C19.8575 7.4001 20 7.69141 20 8V19C20 19.7957 19.6839 20.5587 19.1213 21.1213C18.5587 21.6839 17.7957 22 17 22H3C2.20435 22 1.44129 21.6839 0.87868 21.1213C0.31607 20.5587 0 19.7957 0 19V8C0 7.69141 0.142473 7.4001 0.386059 7.21065L9.38606 0.210648ZM8 20H12V12H8V20ZM14 20V11C14 10.4477 13.5523 10 13 10H7C6.44772 10 6 10.4477 6 11V20H3C2.73478 20 2.48043 19.8946 2.29289 19.7071C2.10536 19.5196 2 19.2652 2 19V8.48908L10 2.26686L18 8.48908V19C18 19.2652 17.8946 19.5196 17.7071 19.7071C17.5196 19.8946 17.2652 20 17 20H14Z"
-              />
-            </svg>
-            <Text weight="bold">HomeOS</Text>
+          <svg  width="20" height="20" viewBox="0 0 15 15"  xmlns="http://www.w3.org/2000/svg"><path d="M7.49991 0.876892C3.84222 0.876892 0.877075 3.84204 0.877075 7.49972C0.877075 11.1574 3.84222 14.1226 7.49991 14.1226C11.1576 14.1226 14.1227 11.1574 14.1227 7.49972C14.1227 3.84204 11.1576 0.876892 7.49991 0.876892ZM1.82708 7.49972C1.82708 4.36671 4.36689 1.82689 7.49991 1.82689C10.6329 1.82689 13.1727 4.36671 13.1727 7.49972C13.1727 10.6327 10.6329 13.1726 7.49991 13.1726C4.36689 13.1726 1.82708 10.6327 1.82708 7.49972ZM5.03747 9.21395C4.87949 8.98746 4.56782 8.93193 4.34133 9.08991C4.11484 9.24789 4.05931 9.55956 4.21729 9.78605C4.93926 10.8211 6.14033 11.5 7.50004 11.5C8.85974 11.5 10.0608 10.8211 10.7828 9.78605C10.9408 9.55956 10.8852 9.24789 10.6587 9.08991C10.4323 8.93193 10.1206 8.98746 9.9626 9.21395C9.41963 9.99238 8.51907 10.5 7.50004 10.5C6.481 10.5 5.58044 9.99238 5.03747 9.21395ZM5.37503 6.84998C5.85828 6.84998 6.25003 6.45815 6.25003 5.97498C6.25003 5.4918 5.85828 5.09998 5.37503 5.09998C4.89179 5.09998 4.50003 5.4918 4.50003 5.97498C4.50003 6.45815 4.89179 6.84998 5.37503 6.84998ZM10.5 5.97498C10.5 6.45815 10.1083 6.84998 9.62503 6.84998C9.14179 6.84998 8.75003 6.45815 8.75003 5.97498C8.75003 5.4918 9.14179 5.09998 9.62503 5.09998C10.1083 5.09998 10.5 5.4918 10.5 5.97498Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
-            <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-              <Button variant="ghost" color="gray">
-                Guest
-              </Button>
-              <Button variant="ghost" color="gray">
-                Host
-              </Button>
-              <Button variant="ghost" color="gray">
-                Travel
-              </Button>
-              <Button variant="ghost" color="gray">
-                Experience
-              </Button>
-            </div>
-
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                <IconButton
-                  variant="ghost"
-                  color="gray"
-                  style={{ marginRight: `calc(var(--space-2) * -1)` }}
-                >
-                  <HamburgerMenuIcon />
-                </IconButton>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content align="end" className="overflow-hidden w-36 truncate">
-                <DropdownMenu.Item>Garv</DropdownMenu.Item>
-                <DropdownMenu.Item>
-                  <Avatar
-                    src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop"
-                    fallback="A"
-                  />
-                  <Avatar fallback="A" />
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
+          <Avatar fallback="G" />
           </div>
         </header>
-
-        <main style={{ padding: 'var(--space-6)' }}>
-          <div style={{ marginBottom: 'var(--space-5)' }}>
-            <Text as="p" size="7" weight="bold">
-              Private Room in Elegant French Gothic Home
-            </Text>
-          </div>
-
-          <PhotoArea />
-
-          <div style={{ display: 'flex', gap: 100, marginTop: 'var(--space-6)' }}>
-            <div style={{ flexGrow: 1 }}>
-              <Text as="p" size="5" weight="bold" style={{ marginBottom: 'var(--space-4)' }}>
-                Room in a apartment hosted by Valentina
+        <Flex mt={"9"} ml={"9"} mr={"9"} direction='column' gap={'8'}>
+          <Text  highContrast color="gray" size={"9"} className=''>
+            Spotify Shuffler
+          </Text>
+          <ScrollArea  className=' w-full   bg-white/10'>
+           <Card className='p-2'>
+           <Flex align={'center'} justify={'between'} className='overflow-hidden'>
+              <Flex align={'center'} gap={"6"}>
+                <Avatar color='ruby' fallback="?" />
+                <Text weight={'light'} size={"5"}>
+                locked in
+                </Text>
+              </Flex>
+             <Flex align={'center'} gap={'9'} justify={'between'}>
+             <Text weight={"light"} color="gray" size={"5"} >
+               151 songs
               </Text>
+              <IconButton color="green">
+              <svg width="17" height="17" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.3536 1.14645C12.1583 0.951184 11.8417 0.951184 11.6464 1.14645C11.4512 1.34171 11.4512 1.65829 11.6464 1.85355L12.7929 3H12C10.7037 3 9.71111 3.58423 8.87248 4.38931C8.20065 5.03427 7.59349 5.85684 6.99461 6.6682C6.86287 6.84668 6.73154 7.02462 6.6 7.2C5.10874 9.18835 3.49037 11 0.5 11C0.223858 11 0 11.2239 0 11.5C0 11.7761 0.223858 12 0.5 12C4.00963 12 5.89126 9.81165 7.4 7.8C7.54367 7.60845 7.6832 7.41962 7.81996 7.23454L7.82005 7.23443L7.82006 7.23441C8.41674 6.42695 8.96069 5.69085 9.56502 5.11069C10.2889 4.41577 11.0463 4 12 4H12.7929L11.6464 5.14645C11.4512 5.34171 11.4512 5.65829 11.6464 5.85355C11.8417 6.04882 12.1583 6.04882 12.3536 5.85355L14.3536 3.85355C14.5488 3.65829 14.5488 3.34171 14.3536 3.14645L12.3536 1.14645ZM0.5 3C3.35278 3 5.12992 4.44588 6.50548 6.06746L6.3762 6.24266C6.2483 6.4161 6.12293 6.58609 6 6.75C5.96397 6.79804 5.92798 6.84581 5.892 6.89331C4.57348 5.29306 3.02637 4 0.5 4C0.223858 4 0 3.77614 0 3.5C0 3.22386 0.223858 3 0.5 3ZM8.87248 10.6107C8.37284 10.131 7.90897 9.55314 7.45767 8.95468C7.64688 8.71693 7.82704 8.48061 8 8.25L8.08987 8.12987C8.58412 8.79402 9.05288 9.39766 9.56502 9.88931C10.2889 10.5842 11.0463 11 12 11H12.7929L11.6464 9.85355C11.4512 9.65829 11.4512 9.34171 11.6464 9.14645C11.8417 8.95118 12.1583 8.95118 12.3536 9.14645L14.3536 11.1464C14.5488 11.3417 14.5488 11.6583 14.3536 11.8536L12.3536 13.8536C12.1583 14.0488 11.8417 14.0488 11.6464 13.8536C11.4512 13.6583 11.4512 13.3417 11.6464 13.1464L12.7929 12H12C10.7037 12 9.71111 11.4158 8.87248 10.6107Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+              </IconButton>
+             </Flex>
+           </Flex>
+           </Card>
+          </ScrollArea>
+        </Flex>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gap: 'var(--space-4)',
-                  gridTemplateColumns: '1fr 1fr 1fr'
-                }}
-              >
-                <Card>
-                  <svg
-                    viewBox="0 0 32 32"
-                    style={{
-                      height: 24,
-                      width: 24,
-                      fill: 'currentcolor',
-                      display: 'block',
-                      flexShrink: 0
-                    }}
-                  >
-                    <path d="M28 4a2 2 0 0 1 1.995 1.85L30 6v7.839l1.846 5.537a3 3 0 0 1 .115.468l.03.24.009.24V30h-2v-2H2v2H0v-9.675a3 3 0 0 1 .087-.717l.067-.232L2 13.836V6a2 2 0 0 1 1.697-1.977l.154-.018L4 4zm2 18H2v4h28zm-1.388-6H3.387l-1.333 4h27.891zM28 6H4v8h2v-4a2 2 0 0 1 1.85-1.995L8 8h16a2 2 0 0 1 1.995 1.85L26 10v4h2zm-13 4H8v4h7zm9 0h-7v4h7z"></path>
-                  </svg>
-                  <Text size="2" weight="bold">
-                    1 bed
-                  </Text>
-                </Card>
-                <Card>
-                  <svg
-                    viewBox="0 0 32 32"
-                    style={{
-                      height: 24,
-                      width: 24,
-                      fill: 'currentcolor',
-                      display: 'block',
-                      flexShrink: 0
-                    }}
-                  >
-                    <path d="M7 1a3 3 0 0 0-2.995 2.824L4 4v27h2V4a1 1 0 0 1 .883-.993L7 3h11a1 1 0 0 1 .993.883L19 4v1h-5a1 1 0 0 0-.993.883L13 6v3h-3v2h19V9h-2V6a1 1 0 0 0-.883-.993L26 5h-5V4a3 3 0 0 0-2.824-2.995L18 1H7zm13 28a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-10 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-10 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-10 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-10 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm5-4a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-5 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm10 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM15 7h10v2H15V7z"></path>
-                  </svg>
-                  <Text size="2" weight="bold">
-                    Shared bathroom
-                  </Text>
-                </Card>
-                <Card>
-                  <svg
-                    viewBox="0 0 32 32"
-                    style={{
-                      height: 24,
-                      width: 24,
-                      fill: 'currentcolor',
-                      display: 'block',
-                      flexShrink: 0
-                    }}
-                  >
-                    <path d="M31.707,15.293,29,12.58594,18.12109,1.707a3.07251,3.07251,0,0,0-4.24218,0L3,12.58594.293,15.293,1.707,16.707,3,15.41406V28a2.00229,2.00229,0,0,0,2,2H27a2.0026,2.0026,0,0,0,2-2V15.41406l1.293,1.293ZM9.0799,28A7.00456,7.00456,0,0,1,15,22.07983V19.78815a2.49986,2.49986,0,1,1,2,.00012V22.0799A7.00512,7.00512,0,0,1,22.9201,28ZM27,28H24.92218A9.00972,9.00972,0,0,0,19.252,20.60742a4.5,4.5,0,1,0-6.5039,0A9.01069,9.01069,0,0,0,7.07782,28H5V13.41406l10.293-10.293a1.00142,1.00142,0,0,1,1.41406,0L27,13.41406Z"></path>
-                  </svg>
-                  <Text size="2" weight="bold">
-                    Host or others may share home
-                  </Text>
-                </Card>
-              </div>
-              <Separator size="4" style={{ marginTop: 30, marginBottom: 30 }} />
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <div style={{ display: 'flex', gap: 15 }}>
-                  <svg
-                    viewBox="0 0 32 32"
-                    style={{
-                      height: 24,
-                      width: 24,
-                      fill: 'currentcolor',
-                      display: 'block'
-                    }}
-                  >
-                    <path d="m17 6c1.0543618 0 1.9181651.81587779 1.9945143 1.85073766l.0054857.14926234.0008825 8.7646837c.082702.0740788.161269.1526799.235312.2354146l4.7638055-.0000983v-3h-3c-.6424073 0-1.1071307-.5923403-.9796308-1.2018783l.0309475-.1143495 2-5.99999997c.12374-.37122012.4508064-.63259558.8326391-.67705046l.1160442-.00672177h4c.3913004 0 .7426904.22762818.9056101.57580861l.0430732.10796362 2 5.99999997c.203147.6094411-.2118379 1.2376308-.8304154 1.3094267l-.1182679.0068011h-3v3h5c.5128358 0 .9355072.3860402.9932723.8833789l.0067277.1166211v12h-2v-3h-10v3h-2v-3h-16v3h-2v-11c0-.8885473.3862919-1.6868712 1.00009834-2.2361945l-.00009834-8.7638055c0-1.0543618.81587779-1.91816512 1.85073766-1.99451426l.14926234-.00548574zm13 13h-10v6h10zm-13-1h-14c-.51283584 0-.93550716.3860402-.99327227.8833789l-.00672773.1166211v6h16v-6c0-.4733869-.3289337-.8699473-.7707092-.9735893l-.1126697-.019683zm8 3c.5522847 0 1 .4477153 1 1s-.4477153 1-1 1-1-.4477153-1-1 .4477153-1 1-1zm-8-13h-14v8h2v-3c0-1.0543618.81587779-1.9181651 1.85073766-1.9945143l.14926234-.0054857h6c1.0543618 0 1.9181651.8158778 1.9945143 1.8507377l.0054857.1492623v3h2zm-4 5h-6v3h6zm13.279-5h-2.559l-1.333 4h5.225z"></path>
-                  </svg>
-                  <Text as="p" weight="bold">
-                    Room in an apartment
-                  </Text>
-                </div>
-                <div style={{ display: 'flex', gap: 15 }}>
-                  <svg
-                    viewBox="0 0 32 32"
-                    style={{
-                      height: 24,
-                      width: 24,
-                      fill: 'currentcolor',
-                      display: 'block'
-                    }}
-                  >
-                    <path d="m11.6667 0-.00095 1.666h8.667l.00055-1.666h2l-.00055 1.666 6.00065.00063c1.0543745 0 1.9181663.81587127 1.9945143 1.85073677l.0054857.14926323v15.91907c0 .4715696-.1664445.9258658-.4669028 1.2844692l-.1188904.1298308-8.7476886 8.7476953c-.3334303.3332526-.7723097.5367561-1.2381975.5778649l-.1758207.0077398h-12.91915c-2.68874373 0-4.88181754-2.1223321-4.99538046-4.7831124l-.00461954-.2168876v-21.66668c0-1.05436021.81587582-1.91815587 1.85073739-1.99450431l.14926261-.00548569 5.999-.00063.00095-1.666zm16.66605 11.666h-24.666v13.6673c0 1.5976581 1.24893332 2.9036593 2.82372864 2.9949072l.17627136.0050928 10.999-.0003.00095-5.6664c0-2.6887355 2.122362-4.8818171 4.7832071-4.9953804l.2168929-.0046196 5.66595-.0006zm-.081 8-5.58495.0006c-1.5977285 0-2.9037573 1.2489454-2.9950071 2.8237299l-.0050929.1762701-.00095 5.5864zm-18.586-16-5.999.00062v5.99938h24.666l.00065-5.99938-6.00065-.00062.00055 1.66733h-2l-.00055-1.66733h-8.667l.00095 1.66733h-2z"></path>
-                  </svg>
-                  <Text as="p" weight="bold">
-                    Free cancellation before 24 May
-                  </Text>
-                </div>
-              </div>
-
-              <Separator size="4" style={{ marginTop: 30, marginBottom: 30 }} />
-
-              <Text as="p" weight="bold" size="5" style={{ marginBottom: 'var(--space-2)' }}>
-                About this place
-              </Text>
-
-              <Text as="p" style={{ marginBottom: 'var(--space-4)' }}>
-                Nice apartment with a very cozy living room, a large terrace, an equipped kitchen,
-                two bedrooms and a bathroom. The house is very bright thanks to the large windows.
-                It is located in a quiet area where several means of transport that connect it both
-                to the center of the city in 15/20min and to the airport of Milan in 15 min.
-              </Text>
-
-              <Link color="gray">Learn more</Link>
-            </div>
-
-            <div style={{ paddingRight: 'var(--space-6)', position: 'relative' }}>
-              <div
-                style={{
-                  borderRadius: 'var(--radius-4)',
-                  marginTop: -90,
-                  width: 340,
-                  backgroundColor: 'var(--color-background)',
-                  boxShadow: 'var(--shadow-3)',
-                  padding: 30,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 15
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end'
-                  }}
-                >
-                  <div>
-                    <Text size="6" weight="bold">
-                      £70
-                    </Text>{' '}
-                    <Text color="gray">night</Text>
-                  </div>
-                  <Link size="2" color="gray">
-                    4 reviews
-                  </Link>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 'var(--space-2)',
-                    marginBottom: 'var(--space-2)'
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: 'var(--space-2)'
-                    }}
-                  >
-                    <LabelValueCard label="Check-in" value="31/05/2023" />
-                    <LabelValueCard label="Check-out" value="05/06/2023" />
-                  </div>
-
-                  <Popover.Root>
-                    <Popover.Trigger>
-                      <button>
-                        <div>
-                          <Text as="p" size="1" weight="bold">
-                            Guests
-                          </Text>
-
-                          <Text as="p" size="2">
-                            {totalCount} guest{totalCount > 1 ? 's' : ''}
-                          </Text>
-                        </div>
-
-                        <ChevronDownIcon />
-                      </button>
-                    </Popover.Trigger>
-                    <Popover.Content
-                      align="center"
-                      style={{
-                        boxSizing: 'border-box',
-                        padding: 'var(--space-5)',
-                        backgroundColor: 'var(--gray-1)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 'var(--space-4)'
-                      }}
-                    >
-                      <GuestSelectorItem
-                        label="Adults"
-                        subLabel="Age 13+"
-                        value={adultCount}
-                        onValueChange={setAdultCount}
-                      />
-
-                      <GuestSelectorItem
-                        label="Children"
-                        subLabel="Ages 2–12"
-                        value={childCount}
-                        onValueChange={setChildCount}
-                      />
-
-                      <GuestSelectorItem
-                        label="Infants"
-                        subLabel="Under 2"
-                        value={infantCount}
-                        onValueChange={setInfantCount}
-                      />
-                    </Popover.Content>
-                  </Popover.Root>
-
-                  <ConfirmBookingDialog guestCount={totalCount}>
-                    <Button size="3" variant="solid" style={{ width: '100%' }}>
-                      Reserve
-                    </Button>
-                  </ConfirmBookingDialog>
-                </div>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 'var(--space-3)'
-                  }}
-                >
-                  <ItemisedRow label="£70 x 5 nights" amount="£348" />
-                  <ItemisedRow label="Cleaning fee" amount="£17" />
-                  <ItemisedRow label="Service fee" amount="£62" />
-                  <ItemisedRow label="Taxes" amount="£13" />
-                </div>
-                <Separator size="4" />
-                <ItemisedRow label="Total" amount="£440" />
-              </div>
-            </div>
-          </div>
-        </main>
       </div>
-    </div>
   );
 }
-
-const ItemisedRow: React.FC<{ label: string; amount: string }> = ({ label, amount }) => {
-  return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Text>{label}</Text> <Text weight="bold">{amount}</Text>
-    </div>
-  );
-};
-
-const PhotoArea: React.FC = () => {
-  return (
-    <div
-      style={{
-        height: 500,
-        borderRadius: 'var(--radius-6)',
-        overflow: 'hidden',
-        display: 'grid',
-        gridTemplateColumns: '1.25fr 1fr',
-        gap: 'var(--space-2)',
-        position: 'relative'
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: 'var(--gray-4)',
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1615529182904-14819c35db37?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80")',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover'
-        }}
-      />
-      <div
-        style={{
-          backgroundColor: 'var(--gray-4)',
-          backgroundImage:
-            'url("https://images.unsplash.com/photo-1585128792020-803d29415281?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80")',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover'
-        }}
-      />
-      <Button
-        variant="solid"
-        highContrast
-        style={{
-          position: 'absolute',
-          top: 'var(--space-6)',
-          right: 'var(--space-6)'
-        }}
-      >
-        <span
-          style={{
-            color: 'var(--gray-8)'
-          }}
-        >
-          <GridIcon />
-        </span>
-        Show all photos
-      </Button>
-    </div>
-  );
-};
-
-const Card: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <div
-      style={{
-        padding: `var(--space-3) var(--space-5)`,
-        border: '1px solid var(--gray-7)',
-        borderRadius: 'var(--radius-3)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--space-4)'
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
-function ConfirmBookingDialog({ children, guestCount }: any) {
-  return (
-    <Dialog.Root>
-      <Dialog.Trigger>{children}</Dialog.Trigger>
-      <Dialog.Content style={{ maxWidth: 550 }}>
-        <Dialog.Title size="5">Confirm and pay</Dialog.Title>
-        <Dialog.Description
-          size="2"
-          style={{ marginTop: 'var(--space-2)', marginBottom: 'var(--space-5)' }}
-        >
-          Your booking is only moments away.
-        </Dialog.Description>
-
-        <Text as="p" weight="bold" style={{ marginBottom: 'var(--space-3)' }}>
-          Your trip
-        </Text>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
-          <LabelValueCard label="Check-in" value="31/05/2023" />
-          <LabelValueCard label="Check-out" value="05/06/2023" />
-          <LabelValueCard
-            label="Guests"
-            value={`${guestCount} guest${guestCount > 1 ? 's' : ''}`}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 'var(--space-3)',
-            marginTop: 'var(--space-5)'
-          }}
-        >
-          <Dialog.Close>
-            <Button variant="soft" color="gray">
-              Cancel
-            </Button>
-          </Dialog.Close>
-          <Dialog.Close>
-            <Button variant="solid">Confirm booking</Button>
-          </Dialog.Close>
-        </div>
-      </Dialog.Content>
-    </Dialog.Root>
-  );
-}
-
-const LabelValueCard: React.FC<{ label: string; value: string }> = ({ label, value }) => {
-  return (
-    <div
-      style={{
-        padding: 'var(--space-3) var(--space-4)',
-        border: '1px solid var(--gray-7)',
-        borderRadius: 'var(--radius-3)'
-      }}
-    >
-      <Text as="p" size="1" weight="bold">
-        {label}
-      </Text>
-
-      <Text as="p" size="2">
-        {value}
-      </Text>
-    </div>
-  );
-};
-
-const GuestSelectorItem: React.FC<{
-  value: number;
-  onValueChange: (value: number) => void;
-  label: string;
-  subLabel: string;
-}> = ({ label, subLabel, value, onValueChange }) => {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}
-    >
-      <div>
-        <Text size="2" weight="bold">
-          {label}
-        </Text>
-        <Text size="2" color="gray">
-          {subLabel}
-        </Text>
-      </div>
-
-      <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center' }}>
-        <IconButton
-          disabled={value === 0}
-          size="1"
-          variant="outline"
-          radius="full"
-          onClick={() => onValueChange(value - 1)}
-        >
-          <MinusIcon />
-        </IconButton>
-
-        <Text size="2" weight="bold" style={{ fontVariantNumeric: 'tabular-nums' }}>
-          {value}
-        </Text>
-
-        <IconButton size="1" variant="solid" radius="full" onClick={() => onValueChange(value + 1)}>
-          <PlusIcon />
-        </IconButton>
-      </div>
-    </div>
-  );
-};

@@ -5,7 +5,8 @@ import {
   Flex,
   ScrollArea,
   Card,
-  IconButton
+  IconButton,
+  Button
   //
   // ThemePanel,
 } from '@radix-ui/themes';
@@ -49,8 +50,10 @@ const PlaylistCard = ({ name, count, img }: any) => {
 };
 
 export default function HomeOS() {
-  const user = useContext(AuthContext);
-  console.log(user)
+  const { user, playlists, loginWithSpotifyClick } = useContext<any>(AuthContext);
+  console.log(user, playlists);
+
+  // You need to make it display a screen for when the user is not logged in or null, and then add a login button so they can login, also logout. Then off there.
   return (
     <div
       className="w-[100vw] h-[100vh] overflow-hidden "
@@ -71,7 +74,11 @@ export default function HomeOS() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
-          <Avatar fallback="G" />
+          {user ? (
+            <Avatar fallback={user.display_name.charAt(0)} />
+          ) : (
+            <Button onClick={() => loginWithSpotifyClick()}>Login</Button>
+          )}
         </div>
       </header>
       <Flex mt={'9'} ml={'8'} mr={'8'} direction="column" gap={'8'}>
@@ -79,7 +86,9 @@ export default function HomeOS() {
           Spotify Shuffler
         </Text>
         <Text ml={'4'} mr={'3'} mt={'-7'} color="gray" size={'2'} className="">
-          Click the green button on any playlist youd like to shuffle
+          {user
+            ? 'Click the green button on any playlist youd like to shuffle'
+            : 'Login to Spotify to shuffle your playlists'}
         </Text>
         <ScrollArea
           size={'1'}
@@ -89,12 +98,17 @@ export default function HomeOS() {
           scrollbars="vertical"
           style={{ height: 375 }}
         >
-          <PlaylistCard name={'lock in'} count={151} img={'asd'} />
-          <PlaylistCard name={'lock in'} count={151} img={'asd'} />
-          <PlaylistCard name={'lock in'} count={151} img={'asd'} />
-          <PlaylistCard name={'lock in'} count={151} img={'asd'} />
-          <PlaylistCard name={'lock in'} count={151} img={'asd'} />
-          <PlaylistCard name={'lock in'} count={151} img={'asd'} />
+          {user &&
+            playlists?.items
+              .filter((item: any) => item.owner.id === user.id)
+              .map((playlist: any) => (
+                <PlaylistCard
+                  key={playlist.id}
+                  name={playlist.name}
+                  count={playlist.tracks.total}
+                  img={playlist.images[0].url}
+                />
+              ))}
         </ScrollArea>
       </Flex>
     </div>

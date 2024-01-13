@@ -7,6 +7,7 @@ export const AuthContext: any = React.createContext(null);
 
 export const AuthProvider = (props: any) => {
   const [user, setUser] = React.useState(null);
+  const [playlists, setPlaylists] = React.useState(null);
 
   const redirectUrl = 'http://localhost:5173'; // your redirect URL - must be localhost URL and/or HTTPS
   const authorizationEndpoint = 'https://accounts.spotify.com/authorize';
@@ -114,7 +115,16 @@ export const AuthProvider = (props: any) => {
       headers: { Authorization: 'Bearer ' + currentToken.access_token }
     });
 
-    setUser(await response.json())
+    return await response.json();
+  }
+
+  async function getUserPlaylists(user: any) {
+    const response = await fetch(`https://api.spotify.com/v1/users/${user.id}/playlists`, {
+      method: 'GET',
+      headers: { Authorization: 'Bearer ' + currentToken.access_token }
+    });
+
+    return await response.json();
   }
 
   // Click handlers
@@ -133,42 +143,40 @@ export const AuthProvider = (props: any) => {
     // renderTemplate("oauth", "oauth-template", currentToken);
   }
 
-
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const args = new URLSearchParams(window.location.search);
     const code = args.get('code');
 
-    (async()=>{
-    if (code) {
-      console.log('code')
-      const token = await getToken(code);
-      currentToken.save(token);
+    (async () => {
+      if (code) {
+        const token = await getToken(code);
+        currentToken.save(token);
 
-      // Remove code from URL so we can refresh correctly.
-      const url = new URL(window.location.href);
-      url.searchParams.delete("code");
+        // Remove code from URL so we can refresh correctly.
+        const url = new URL(window.location.href);
+        url.searchParams.delete('code');
 
-      const updatedUrl = url.search ? url.href : url.href.replace('?', '');
-      window.history.replaceState({}, document.title, updatedUrl);
+        const updatedUrl = url.search ? url.href : url.href.replace('?', '');
+        window.history.replaceState({}, document.title, updatedUrl);
+      }
 
-    }
+      if (currentToken.access_token && currentToken.access_token != 'undefined') {
+        const userData = await getUserData();
+        setUser(userData);
+        const userPlaylists = await getUserPlaylists(userData);
+        setPlaylists(userPlaylists);
+        console.log(userPlaylists);
+      }
 
-    if (currentToken.access_token) {
-      console.log('coder')
-      await getUserData();
-    }
-
-    // Otherwise we're not logged in, so render the login template
-    if (!currentToken.access_token) {
-      console.log('nothing')
-      setUser(null);
-    }
-
-    })()
-  },[currentToken, getUserData])
+      // Otherwise we're not logged in, so render the login template
+      if (!currentToken.access_token || currentToken.access_token == 'undefined') {
+        setUser(null);
+      }
+    })();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick }}>
       {props.children}
     </AuthContext.Provider>
   );

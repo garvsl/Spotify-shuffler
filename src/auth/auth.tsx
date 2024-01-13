@@ -119,8 +119,8 @@ export const AuthProvider = (props: any) => {
     return await response.json();
   }
 
-  async function getUserPlaylists(user: any) {
-    const response = await fetch(`https://api.spotify.com/v1/users/${user.id}/playlists`, {
+  async function getUserPlaylists() {
+    const response = await fetch(`https://api.spotify.com/v1/me/playlists`, {
       method: 'GET',
       headers: { Authorization: 'Bearer ' + currentToken.access_token }
     });
@@ -128,7 +128,62 @@ export const AuthProvider = (props: any) => {
     return await response.json();
   }
 
-  // Click handlers
+  async function getPlaylistTracks(playlistId: any, offset:number, limit:number) {
+    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}&fields=limit,offset,total%2Citems%28track%28id%29%29`, {
+      method: 'GET',
+      headers: { Authorization: 'Bearer ' + currentToken.access_token }
+    });
+    return await response.json();
+  }
+
+
+
+
+  async function getAllPlaylistTracks(playlistId:any, tracks: any, trackNumLeft:number):Promise<any> {
+    if(trackNumLeft <= 0) {
+      return tracks.items;
+    }
+    const tracksed = await getPlaylistTracks(playlistId, tracks?.offset + tracks?.items?.length, trackNumLeft > 100 ? 100 : trackNumLeft)
+    const theTracks = await getAllPlaylistTracks(playlistId, tracksed, trackNumLeft-tracksed?.items?.length)
+    return theTracks.concat(tracks.items)
+  }
+
+  function shuffleArray(array:any) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+  }
+
+  async function shuffleTracks(playlistId: any) {
+    const tracks = await getPlaylistTracks(playlistId, 0, 100)
+    const allTracks = await getAllPlaylistTracks(playlistId, tracks, tracks?.total-tracks?.items?.length)
+    shuffleArray(allTracks)
+    return allTracks
+  }
+
+  // {
+  //   "total": 136,
+  //   "items": [
+  //     {
+  //       "track": {
+  //         "id": "4v9Iq4LANThJsxnMNukzOf"
+  //       }
+  //     },
+  //     {
+  //       "track": {
+  //         "id": "5nOEci7Elw7ybRmf1v4qfZ"
+  //       }
+  //     },
+  //     {
+  //       "track": {
+  //         "id": "27FiGK9QF0vCkJeXNhQZUr"
+  //       }
+  //     },
+  //     {
+  //       "track": {
+    
+
   async function loginWithSpotifyClick() {
     await redirectToSpotifyAuthorize();
   }
@@ -167,11 +222,13 @@ export const AuthProvider = (props: any) => {
 
       if (currentToken.access_token && currentToken.access_token != 'undefined') {
         const userData = await getUserData();
+        console.log(userData)
         if(userData?.error?.message == 'The access token expired') {
           refreshTokenClick();
         }
         setUser(userData);
-        const userPlaylists = await getUserPlaylists(userData);
+        const userPlaylists = await getUserPlaylists();
+        console.log(userPlaylists)
         setPlaylists(userPlaylists);
         setLoading(false);
       }
@@ -185,7 +242,7 @@ export const AuthProvider = (props: any) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading, logoutClick}}>
+    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading, logoutClick, shuffleTracks}}>
       {props.children}
     </AuthContext.Provider>
   );

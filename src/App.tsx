@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Text,
@@ -12,7 +13,7 @@ import {
 } from '@radix-ui/themes';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { AuthContext } from './auth/auth';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ExitIcon } from '@radix-ui/react-icons';
 
 const PlaylistCard = ({ name, count, img }: any) => {
@@ -52,9 +53,12 @@ const PlaylistCard = ({ name, count, img }: any) => {
 };
 
 export default function HomeOS() {
-  const { user, playlists, loginWithSpotifyClick, loading, logoutClick } = useContext<any>(AuthContext);
+  const { user, playlists, loginWithSpotifyClick, loading, logoutClick, shuffleTracks } = useContext<any>(AuthContext);
   console.log(user, playlists);
-
+  
+  useEffect(()=>{
+    shuffleTracks("5svM86Q9KYWhePuGPyOafc")
+  },[])
   // You need to make it display a screen for when the user is not logged in or null, and then add a login button so they can login, also logout. Then off there.
   return (
     <div
@@ -89,6 +93,12 @@ export default function HomeOS() {
                       className="min-w-[120px] mr-[0.35rem] bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
                       sideOffset={5}
                     >
+                      <DropdownMenu.Item  className="group text-[13px] leading-none truncate text-black rounded-[3px] flex items-center justify-between h-[25px] px-[8px] relative  select-none outline-none">
+                        <Text>
+                          {user?.display_name}
+                        </Text>
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Separator className="h-[1px] bg-[transparent] m-[2.5px] " />
                       <DropdownMenu.Item onClick={()=>logoutClick()}  className="group text-[13px] leading-none text-black rounded-[3px] flex items-center justify-between h-[25px] px-[8px] relative cursor-pointer select-none outline-none data-[disabled]:text-white data-[disabled]:pointer-events-none data-[highlighted]:bg-[#dc143c] data-[highlighted]:text-white">
                         Log-out{' '}
                         <ExitIcon/>
@@ -130,7 +140,7 @@ export default function HomeOS() {
                     key={playlist.id}
                     name={playlist.name}
                     count={playlist.tracks.total}
-                    img={playlist.images[0].url}
+                    img={playlist.images[0]?.url}
                   />
                 ))}
           </ScrollArea>

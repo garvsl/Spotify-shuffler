@@ -50,7 +50,7 @@ const PlaylistCard = ({ name, count, img }: any) => {
 };
 
 export default function HomeOS() {
-  const { user, playlists, loginWithSpotifyClick } = useContext<any>(AuthContext);
+  const { user, playlists, loginWithSpotifyClick, loading } = useContext<any>(AuthContext);
   console.log(user, playlists);
 
   // You need to make it display a screen for when the user is not logged in or null, and then add a login button so they can login, also logout. Then off there.
@@ -73,15 +73,18 @@ export default function HomeOS() {
           </svg>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
+        {!loading && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)' }}>
           {user ? (
             <Avatar fallback={user.display_name.charAt(0)} />
           ) : (
             <Button onClick={() => loginWithSpotifyClick()}>Login</Button>
           )}
         </div>
+        )}
       </header>
-      <Flex mt={'9'} ml={'8'} mr={'8'} direction="column" gap={'8'}>
+      {!loading && (
+        <Flex mt={'9'} ml={'8'} mr={'8'} direction="column" gap={'8'}>
         <Text ml={'3'} mr={'3'} highContrast color="gray" size={'9'} className="">
           Spotify Shuffler
         </Text>
@@ -111,6 +114,7 @@ export default function HomeOS() {
               ))}
         </ScrollArea>
       </Flex>
+      )}
     </div>
   );
 }

@@ -7,9 +7,10 @@ export const AuthContext: any = React.createContext(null);
 
 export const AuthProvider = (props: any) => {
   const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
   const [playlists, setPlaylists] = React.useState(null);
 
-  const redirectUrl = 'http://localhost:5173'; // your redirect URL - must be localhost URL and/or HTTPS
+  const redirectUrl = 'http://localhost:5173'; 
   const authorizationEndpoint = 'https://accounts.spotify.com/authorize';
   const tokenEndpoint = 'https://accounts.spotify.com/api/token';
   const scope =
@@ -140,12 +141,13 @@ export const AuthProvider = (props: any) => {
   async function refreshTokenClick() {
     const token = await refreshToken();
     currentToken.save(token);
-    // renderTemplate("oauth", "oauth-template", currentToken);
+    setUser(null)
   }
 
   React.useEffect(() => {
     const args = new URLSearchParams(window.location.search);
     const code = args.get('code');
+
 
     (async () => {
       if (code) {
@@ -158,6 +160,7 @@ export const AuthProvider = (props: any) => {
 
         const updatedUrl = url.search ? url.href : url.href.replace('?', '');
         window.history.replaceState({}, document.title, updatedUrl);
+        setLoading(false)
       }
 
       if (currentToken.access_token && currentToken.access_token != 'undefined') {
@@ -166,17 +169,19 @@ export const AuthProvider = (props: any) => {
         const userPlaylists = await getUserPlaylists(userData);
         setPlaylists(userPlaylists);
         console.log(userPlaylists);
+        setLoading(false)
       }
 
       // Otherwise we're not logged in, so render the login template
       if (!currentToken.access_token || currentToken.access_token == 'undefined') {
         setUser(null);
+        setLoading(false)
       }
     })();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick }}>
+    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading }}>
       {props.children}
     </AuthContext.Provider>
   );

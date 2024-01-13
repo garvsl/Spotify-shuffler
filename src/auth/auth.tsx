@@ -9,6 +9,7 @@ export const AuthProvider = (props: any) => {
   const [user, setUser] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [playlists, setPlaylists] = React.useState(null);
+  const [refresh, setRefresh] = React.useState(false);
 
   const redirectUrl = 'http://localhost:5173';
   const authorizationEndpoint = 'https://accounts.spotify.com/authorize';
@@ -138,7 +139,6 @@ export const AuthProvider = (props: any) => {
 
 
 
-
   async function getAllPlaylistTracks(playlistId:any, tracks: any, trackNumLeft:number):Promise<any> {
     if(trackNumLeft <= 0) {
       return tracks.items;
@@ -151,7 +151,7 @@ export const AuthProvider = (props: any) => {
   function shuffleArray(array:any) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+      [array[i], array[j]] = [array[j], array[i]]; 
     }
   }
 
@@ -161,27 +161,6 @@ export const AuthProvider = (props: any) => {
     shuffleArray(allTracks)
     return allTracks
   }
-
-  // {
-  //   "total": 136,
-  //   "items": [
-  //     {
-  //       "track": {
-  //         "id": "4v9Iq4LANThJsxnMNukzOf"
-  //       }
-  //     },
-  //     {
-  //       "track": {
-  //         "id": "5nOEci7Elw7ybRmf1v4qfZ"
-  //       }
-  //     },
-  //     {
-  //       "track": {
-  //         "id": "27FiGK9QF0vCkJeXNhQZUr"
-  //       }
-  //     },
-  //     {
-  //       "track": {
     
 
   async function loginWithSpotifyClick() {
@@ -242,7 +221,7 @@ export const AuthProvider = (props: any) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading, logoutClick, shuffleTracks}}>
+    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading, logoutClick, shuffleTracks, refresh, setRefresh}}>
       {props.children}
     </AuthContext.Provider>
   );

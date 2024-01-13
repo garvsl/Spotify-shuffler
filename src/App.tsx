@@ -59,15 +59,15 @@ export default function HomeOS() {
   useEffect(()=>{
     shuffleTracks("5svM86Q9KYWhePuGPyOafc")
   },[])
-  // You need to make it display a screen for when the user is not logged in or null, and then add a login button so they can login, also logout. Then off there.
+
   return (
     <div
-      className="w-[100vw] h-[100vh] overflow-hidden "
+      className="w-[100vw] h-[100vh] rounded-t-lg overflow-hidden  "
       style={{
-        background: 'linear-gradient(150deg, transparent 60%, green 100%)'
+        background: 'linear-gradient(180deg, transparent 40%, green 110%)'
       }}
     >
-      <header className="w-[100vw] p-4 border-b border-gray-8 flex justify-between items-center sticky top-0 left-0 z-50 backdrop-blur-xl bg-white/30">
+      <header className="w-[100vw] p-4 border-b border-gray-8 flex justify-between items-center sticky top-0 left-0 z-50 backdrop-blur-3xl bg-white/30">
         {!loading && (
           <>
             <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
@@ -126,11 +126,11 @@ export default function HomeOS() {
           </Text>
           <ScrollArea
             size={'1'}
-            className="p-[0.75rem] rounded-lg"
+            className="p-[0.75rem] rounded-xl backdrop-blur-3xl bg-white/40  border-black border-2 border-opacity-5"
             radius="full"
             type="hover"
             scrollbars="vertical"
-            style={{ height: 375 }}
+            style={{ height: 375}}
           >
             {user &&
               playlists?.items

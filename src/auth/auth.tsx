@@ -123,11 +123,12 @@ export const AuthProvider = (props: any) => {
       }
 
       if (currentToken.access_token && currentToken.access_token != 'undefined') {
-        const userData = await getUserData();
+        let userData = await getUserData();
 
         if (userData?.error?.message == 'The access token expired') {
           refreshTokenClick();
         }
+        userData = await getUserData();
         setUser(userData);
         const userPlaylists = await getUserPlaylists();
 

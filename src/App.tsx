@@ -10,14 +10,13 @@ import * as React from 'react';
 import { ToastDemo } from './components/toast';
 import { PlaylistCard } from './components/card';
 
-
 export default function HomeOS() {
   const { user, playlists, loginWithSpotifyClick, loading, logoutClick } =
     useContext<any>(AuthContext);
 
   return (
     <div
-      className="w-[100vw] h-[100vh] rounded-t-lg overflow-hidden  "
+      className="w-[100vw] h-[100vh] rounded-t-lg overflow-x-hidden pb-10 "
       style={{
         background: 'linear-gradient(150deg, transparent 40%, green 110%)'
       }}
@@ -71,7 +70,7 @@ export default function HomeOS() {
       </header>
 
       {!loading && (
-        <Flex mt={'9'} ml={'8'} mr={'8'} direction="column" gap={'8'}>
+        <Flex  mt={'9'} ml={'8'} mr={'8'} className='sm:!m-2' direction="column" gap={'8'}>
           <Text ml={'3'} mr={'3'} highContrast color="gray" size={'9'} className="">
             Spotify Shuffler
           </Text>
@@ -82,11 +81,11 @@ export default function HomeOS() {
           </Text>
           <ScrollArea
             size={'1'}
-            className="p-[0.75rem] rounded-xl  bg-white/50  border-black border-2 border-opacity-5"
+            className="p-[0.75rem] rounded-xl   bg-white/50  border-black border-2 border-opacity-5 "
             radius="full"
             type="hover"
             scrollbars="vertical"
-            style={{ height: 375 }}
+            style={{minHeight:'400px', height: 'calc(80vh - 16rem)' }}
           >
             {user &&
               playlists?.items

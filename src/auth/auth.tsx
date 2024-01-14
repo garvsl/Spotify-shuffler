@@ -2,6 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
+import { getUserData, getUserPlaylists } from './fetch/user';
+import { addTracksToPlaylist, createPlaylist, shuffleTracks } from './fetch/playlist';
+import { currentToken } from './token';
 
 export const AuthContext: any = React.createContext(null);
 
@@ -10,6 +13,7 @@ export const AuthProvider = (props: any) => {
   const [loading, setLoading] = React.useState(true);
   const [playlists, setPlaylists] = React.useState(null);
   const [refresh, setRefresh] = React.useState(false);
+  const [shuffleLoad, setShuffleLoad] = React.useState(null);
 
   const redirectUrl = 'http://localhost:5173';
   const authorizationEndpoint = 'https://accounts.spotify.com/authorize';
@@ -17,32 +21,6 @@ export const AuthProvider = (props: any) => {
   const scope =
     'user-read-private user-read-email playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private';
   const clientId = '046df2a638584856a52c02e46a4bb869';
-
-  const currentToken = {
-    get access_token() {
-      return localStorage.getItem('access_token') || null;
-    },
-    get refresh_token() {
-      return localStorage.getItem('refresh_token') || null;
-    },
-    get expires_in() {
-      return localStorage.getItem('refresh_in') || null;
-    },
-    get expires() {
-      return localStorage.getItem('expires') || null;
-    },
-
-    save: function (response: any) {
-      const { access_token, refresh_token, expires_in } = response;
-      localStorage.setItem('access_token', access_token);
-      localStorage.setItem('refresh_token', refresh_token);
-      localStorage.setItem('expires_in', expires_in);
-
-      const now = new Date();
-      const expiry: any = new Date(now.getTime() + expires_in * 1000);
-      localStorage.setItem('expires', expiry);
-    }
-  };
 
   async function redirectToSpotifyAuthorize() {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -111,58 +89,6 @@ export const AuthProvider = (props: any) => {
     return await response.json();
   }
 
-  async function getUserData() {
-    const response = await fetch('https://api.spotify.com/v1/me', {
-      method: 'GET',
-      headers: { Authorization: 'Bearer ' + currentToken.access_token }
-    });
-
-    return await response.json();
-  }
-
-  async function getUserPlaylists() {
-    const response = await fetch(`https://api.spotify.com/v1/me/playlists`, {
-      method: 'GET',
-      headers: { Authorization: 'Bearer ' + currentToken.access_token }
-    });
-
-    return await response.json();
-  }
-
-  async function getPlaylistTracks(playlistId: any, offset:number, limit:number) {
-    const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${offset}&limit=${limit}&fields=limit,offset,total%2Citems%28track%28id%29%29`, {
-      method: 'GET',
-      headers: { Authorization: 'Bearer ' + currentToken.access_token }
-    });
-    return await response.json();
-  }
-
-
-
-  async function getAllPlaylistTracks(playlistId:any, tracks: any, trackNumLeft:number):Promise<any> {
-    if(trackNumLeft <= 0) {
-      return tracks.items;
-    }
-    const tracksed = await getPlaylistTracks(playlistId, tracks?.offset + tracks?.items?.length, trackNumLeft > 100 ? 100 : trackNumLeft)
-    const theTracks = await getAllPlaylistTracks(playlistId, tracksed, trackNumLeft-tracksed?.items?.length)
-    return theTracks.concat(tracks.items)
-  }
-
-  function shuffleArray(array:any) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; 
-    }
-  }
-
-  async function shuffleTracks(playlistId: any) {
-    const tracks = await getPlaylistTracks(playlistId, 0, 100)
-    const allTracks = await getAllPlaylistTracks(playlistId, tracks, tracks?.total-tracks?.items?.length)
-    shuffleArray(allTracks)
-    return allTracks
-  }
-    
-
   async function loginWithSpotifyClick() {
     await redirectToSpotifyAuthorize();
   }
@@ -176,16 +102,13 @@ export const AuthProvider = (props: any) => {
   async function refreshTokenClick() {
     const token = await refreshToken();
     currentToken.save(token);
-   
   }
 
   React.useEffect(() => {
     const args = new URLSearchParams(window.location.search);
     const code = args.get('code');
 
-    
     (async () => {
-      console.log(currentToken)
       if (code) {
         const token = await getToken(code);
         currentToken.save(token);
@@ -201,13 +124,13 @@ export const AuthProvider = (props: any) => {
 
       if (currentToken.access_token && currentToken.access_token != 'undefined') {
         const userData = await getUserData();
-        console.log(userData)
-        if(userData?.error?.message == 'The access token expired') {
+
+        if (userData?.error?.message == 'The access token expired') {
           refreshTokenClick();
         }
         setUser(userData);
         const userPlaylists = await getUserPlaylists();
-        console.log(userPlaylists)
+
         setPlaylists(userPlaylists);
         setLoading(false);
       }
@@ -218,10 +141,25 @@ export const AuthProvider = (props: any) => {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [refresh]);
 
   return (
-    <AuthContext.Provider value={{ user, playlists, loginWithSpotifyClick, loading, logoutClick, shuffleTracks, refresh, setRefresh}}>
+    <AuthContext.Provider
+      value={{
+        user,
+        playlists,
+        loginWithSpotifyClick,
+        loading,
+        logoutClick,
+        shuffleTracks,
+        refresh,
+        setRefresh,
+        createPlaylist,
+        addTracksToPlaylist,
+        shuffleLoad,
+        setShuffleLoad
+      }}
+    >
       {props.children}
     </AuthContext.Provider>
   );
